@@ -134,3 +134,7 @@ resource "azuread_application" "api" {
 
   identifier_uris = ["api://${var.app_name}-api"]
 }
+
+resource "azuread_service_principal" "api" {
+  client_id = azuread_application.api.client_id
+}
