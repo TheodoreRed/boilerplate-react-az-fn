@@ -6,6 +6,14 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 4.0"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 3.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
   }
 }
 
@@ -13,6 +21,10 @@ provider "azurerm" {
   features {}
   subscription_id                 = var.subscription_id
   resource_provider_registrations = "none"
+}
+
+provider "azuread" {
+  tenant_id = var.ciam_tenant_id
 }
 
 resource "azurerm_resource_group" "main" {
@@ -98,4 +110,27 @@ resource "azurerm_function_app_flex_consumption" "prod" {
   app_settings = {
     "FUNCTIONS_EXTENSION_VERSION" = "~4"
   }
+}
+
+# ---------- API App Registration (per app) ----------
+resource "random_uuid" "api_scope" {}
+
+resource "azuread_application" "api" {
+  display_name = "${var.app_name}-api"
+
+  api {
+    requested_access_token_version = 2
+
+    oauth2_permission_scope {
+      admin_consent_description  = "Access ${var.app_name} API"
+      admin_consent_display_name = "access_as_user"
+      id                         = random_uuid.api_scope.result
+      type                       = "User"
+      user_consent_description   = "Access ${var.app_name} API"
+      user_consent_display_name  = "access_as_user"
+      value                      = "access_as_user"
+    }
+  }
+
+  identifier_uris = ["api://${var.app_name}-api"]
 }

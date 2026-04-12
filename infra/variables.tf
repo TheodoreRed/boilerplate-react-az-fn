@@ -13,6 +13,11 @@ variable "subscription_id" {
   type        = string
 }
 
+variable "ciam_tenant_id" {
+  description = "CIAM tenant ID (Ted Red Apps)"
+  type        = string
+}
+
 variable "location" {
   description = "Azure region"
   type        = string

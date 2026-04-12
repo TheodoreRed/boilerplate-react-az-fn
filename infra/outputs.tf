@@ -35,3 +35,11 @@ output "fn_staging_default_hostname" {
 output "fn_prod_default_hostname" {
   value = azurerm_function_app_flex_consumption.prod.default_hostname
 }
+
+output "api_app_client_id" {
+  value = azuread_application.api.client_id
+}
+
+output "api_app_scope" {
+  value = "api://${var.app_name}-api/access_as_user"
+}

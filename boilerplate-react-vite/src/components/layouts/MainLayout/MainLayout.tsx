@@ -25,6 +25,7 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import { useThemeStore } from '@/lib/theme/useThemeStore'
 import { useT } from '@/i18n/useT'
+import { AccountMenu } from '@/features/auth/AccountMenu'
 
 const DRAWER_WIDTH = 280
 
@@ -125,9 +126,11 @@ const MainLayout = () => {
             </Box>
           )}
 
-          <IconButton onClick={toggleMode} color='inherit'>
+          <IconButton onClick={toggleMode} color='inherit' sx={{ mr: 1 }}>
             {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
+
+          <AccountMenu />
         </Toolbar>
       </AppBar>
 
