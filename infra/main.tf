@@ -89,6 +89,9 @@ resource "azurerm_function_app_flex_consumption" "staging" {
   app_settings = {
     "FUNCTIONS_EXTENSION_VERSION" = "~4"
   }
+    lifecycle {
+    ignore_changes = [app_settings]
+  }
 }
 
 resource "azurerm_function_app_flex_consumption" "prod" {
@@ -109,6 +112,10 @@ resource "azurerm_function_app_flex_consumption" "prod" {
 
   app_settings = {
     "FUNCTIONS_EXTENSION_VERSION" = "~4"
+  }
+
+    lifecycle {
+    ignore_changes = [app_settings]
   }
 }
 
