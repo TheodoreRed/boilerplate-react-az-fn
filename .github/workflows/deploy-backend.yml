@@ -1,6 +1,15 @@
 name: Deploy Backend
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deploy target"
+        required: true
+        type: choice
+        options:
+          - staging
+          - main
   pull_request:
     types: [closed]
     branches:
@@ -17,9 +26,9 @@ env:
 
 jobs:
   build-and-deploy:
-    if: github.event.pull_request.merged == true
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: windows-latest
-    environment: ${{ github.base_ref }}
+    environment: ${{ github.event.inputs.environment || github.base_ref }}
 
     steps:
       - name: Checkout repository
