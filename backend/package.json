@@ -12,12 +12,15 @@
   },
   "dependencies": {
     "@azure/functions": "^4.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "jwks-rsa": "^4.0.1",
     "mongoose": "^9.2.4",
     "zod": "^4.1.13"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.96",
-    "@types/node": "^20.x",
+    "@types/node": "^22.19.17",
     "prettier": "^3.7.4",
     "rimraf": "^5.0.0",
     "typescript": "^5.9.3"

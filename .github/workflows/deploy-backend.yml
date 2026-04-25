@@ -27,7 +27,7 @@ env:
 jobs:
   build-and-deploy:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || github.base_ref }}
 
     steps:
@@ -38,12 +38,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install / Build
-        shell: pwsh
         working-directory: backend
         run: |
-          npm install
+          npm ci
           npm run build
 
       - name: Deploy to Azure Functions

@@ -15,6 +15,8 @@ import { IntlProvider } from 'react-intl'
 import { flattenMessages, messages } from '@/lang'
 import { AuthInitializer } from '@/features/auth/AuthInitializer'
 import { LoadingScreen } from '@/components/LoadingScreen'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function MsalReady({ children }: Readonly<{ children: ReactNode }>) {
   const { inProgress } = useMsal()
@@ -37,7 +39,7 @@ function ThemedApp({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {children}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>{children}</LocalizationProvider>
     </ThemeProvider>
   )
 }
