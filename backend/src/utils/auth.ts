@@ -78,7 +78,7 @@ export async function getAuthUser(req: HttpRequest): Promise<AuthUser | null> {
     const container = getContainer()
     await container.items.upsert({
       id: userId,
-      partitionKey: userId,
+      userId: userId,
       type: 'user',
       email,
       name,
