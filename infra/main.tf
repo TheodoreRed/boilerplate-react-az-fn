@@ -145,3 +145,46 @@ resource "azuread_application" "api" {
 resource "azuread_service_principal" "api" {
   client_id = azuread_application.api.client_id
 }
+
+# ---------- Cosmos DB (Serverless) ----------
+resource "azurerm_cosmosdb_account" "main" {
+  name                = "cosmos-${var.app_name}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  offer_type          = "Standard"
+  kind                = "GlobalDocumentDB"
+
+  capabilities {
+    name = "EnableServerless"
+  }
+
+  consistency_policy {
+    consistency_level = "Session"
+  }
+
+  geo_location {
+    location          = azurerm_resource_group.main.location
+    failover_priority = 0
+  }
+
+ backup {
+    type                = "Periodic"
+    interval_in_minutes = 240
+    retention_in_hours  = 720
+    storage_redundancy  = "Local"
+  }
+}
+
+resource "azurerm_cosmosdb_sql_database" "main" {
+  name                = "${var.app_name}-db"
+  resource_group_name = azurerm_resource_group.main.name
+  account_name        = azurerm_cosmosdb_account.main.name
+}
+
+resource "azurerm_cosmosdb_sql_container" "app" {
+  name                = "app"
+  resource_group_name = azurerm_resource_group.main.name
+  account_name        = azurerm_cosmosdb_account.main.name
+  database_name       = azurerm_cosmosdb_sql_database.main.name
+  partition_key_paths = ["/partitionKey"]
+}

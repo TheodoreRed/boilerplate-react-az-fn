@@ -1,8 +1,7 @@
 import type { HttpRequest } from '@azure/functions'
 import jwt from 'jsonwebtoken'
 import jwksClient from 'jwks-rsa'
-import { UserModel } from '../models/user'
-import { connectDb } from '../mongodb/client'
+import { getContainer } from '../cosmos/client'
 
 const TENANT = process.env.AZURE_CIAM_TENANT_SUBDOMAIN ?? ''
 const CLIENT_ID = process.env.AZURE_CIAM_CLIENT_ID ?? ''
@@ -75,13 +74,16 @@ export async function getAuthUser(req: HttpRequest): Promise<AuthUser | null> {
 
     const email = payload.email ?? payload.preferred_username ?? ''
     const name = payload.name ?? ''
-    const timezone = req.headers.get('x-timezone') || undefined
 
-    const update: Record<string, string> = { email, name }
-    if (timezone) update.timezone = timezone
-
-    await connectDb()
-    await UserModel.findOneAndUpdate({ userId }, update, { upsert: true })
+    const container = getContainer()
+    await container.items.upsert({
+      id: userId,
+      partitionKey: userId,
+      type: 'user',
+      email,
+      name,
+      updatedAt: new Date().toISOString(),
+    })
 
     return { userId, email }
   } catch (err) {
