@@ -43,3 +43,16 @@ output "api_app_client_id" {
 output "api_app_scope" {
   value = "api://${var.app_name}-api/access_as_user"
 }
+
+output "cosmos_endpoint" {
+  value = azurerm_cosmosdb_account.main.endpoint
+}
+
+output "cosmos_key" {
+  value     = azurerm_cosmosdb_account.main.primary_key
+  sensitive = true
+}
+
+output "cosmos_db_name" {
+  value = azurerm_cosmosdb_sql_database.main.name
+}
